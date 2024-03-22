@@ -2,11 +2,16 @@ import { Button, Heading, MultiStep, Text } from '@arthurrios-ignite-ui/react'
 import { Container, Header } from '../styles'
 import { ArrowRight } from '@phosphor-icons/react'
 import { ConnectBox, ConnectItem } from './styles'
+import { signIn, useSession } from 'next-auth/react'
 
 // import { api } from '@/lib/axios'
 // import { AxiosError } from 'axios'
 
 export default function Register() {
+  const session = useSession()
+
+  console.log(session)
+
   // async function handleRegister(data: RegisterFormData) {
 
   // }
@@ -26,7 +31,11 @@ export default function Register() {
       <ConnectBox>
         <ConnectItem>
           <Text>Google Calendar</Text>
-          <Button variant="secondary" size="sm">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => signIn('google')}
+          >
             Connect
             <ArrowRight />
           </Button>
