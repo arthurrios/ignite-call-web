@@ -4,6 +4,7 @@ import { BgGrid, Container, Hero, Preview } from './styles'
 import previewImage from '../../assets/app-preview.png'
 import bgGrid from '../../assets/bg-grid.png'
 import Image from 'next/image'
+import { ClaimUsernameForm } from './components/ClaimUsernameForm'
 
 export default function Home() {
   return (
@@ -14,6 +15,8 @@ export default function Home() {
           Connect your calendar and let people schedule appointments in their
           free time.
         </Text>
+
+        <ClaimUsernameForm />
       </Hero>
       <Preview>
         <Image
