@@ -5,10 +5,7 @@ import { AuthError, ConnectBox, ConnectItem } from './styles'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
-// import { api } from '@/lib/axios'
-// import { AxiosError } from 'axios'
-
-export default function Register() {
+export default function ConnectCalendar() {
   const session = useSession()
 
   const router = useRouter()
@@ -23,10 +20,10 @@ export default function Register() {
   return (
     <Container>
       <Header>
-        <Heading as="strong">Welcome to Ignite Call!</Heading>
+        <Heading as="strong">Connect your calendar!</Heading>
         <Text>
-          We need some information to create your profile! Oh, you can edit this
-          information later.
+          Connect your calendar to automatically check busy hours and new events
+          as they are scheduled.
         </Text>
 
         <MultiStep size={4} currentStep={2} />
