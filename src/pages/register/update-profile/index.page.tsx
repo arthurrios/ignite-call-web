@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Heading,
   MultiStep,
@@ -12,12 +13,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Container, Header } from '../styles'
 import { FormAnnotation, ProfileBox } from './styles'
 import { useSession } from 'next-auth/react'
-import { log } from 'console'
 import { GetServerSideProps } from 'next'
 import { getServerSession } from 'next-auth'
 import { buildNextAuthOptions } from '@/pages/api/auth/[...nextauth].api'
+import { api } from '@/lib/axios'
+import { useRouter } from 'next/router'
 
-const updateProfileSchema = z.object({})
+const updateProfileSchema = z.object({
+  bio: z.string(),
+})
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>
 
@@ -25,16 +29,21 @@ export default function UpdateProfile() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<UpdateProfileData>({
     resolver: zodResolver(updateProfileSchema),
   })
 
   const session = useSession()
+  const router = useRouter()
 
-  console.log(session)
+  async function handleUpdateProfile(data: UpdateProfileData) {
+    await api.put('/users/profile', {
+      bio: data.bio,
+    })
 
-  async function handleUpdateProfile(data: UpdateProfileData) {}
+    await router.push(`schedule/${session.data?.user.username}`)
+  }
 
   return (
     <Container>
@@ -47,6 +56,10 @@ export default function UpdateProfile() {
         <ProfileBox as="form" onSubmit={handleSubmit(handleUpdateProfile)}>
           <label>
             <Text size="sm">Profile photo</Text>
+            <Avatar
+              src={session.data?.user.avatar_url}
+              alt={session.data?.user.name}
+            />
           </label>
 
           <label>
@@ -77,9 +90,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   return {
     props: {
-      session: {
-        session,
-      },
+      session,
     },
   }
 }
