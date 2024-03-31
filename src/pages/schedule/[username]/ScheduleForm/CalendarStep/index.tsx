@@ -10,10 +10,18 @@ import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { api } from '@/lib/axios'
 import { useRouter } from 'next/router'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+dayjs.extend(customParseFormat)
+
+interface Availability {
+  possibleTimes: number[]
+  availableTimes: number[]
+}
 
 export function CalendarStep() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [availability, setAvailability] = useState(null)
+  const [availability, setAvailability] = useState<Availability | null>(null)
 
   const router = useRouter()
   const username = String(router.query.username)
@@ -37,7 +45,7 @@ export function CalendarStep() {
         },
       })
       .then((response) => {
-        console.log(response.data)
+        setAvailability(response.data)
       })
   }, [selectedDate, username])
 
@@ -52,17 +60,16 @@ export function CalendarStep() {
           </TimePickerHeader>
 
           <TimePickerList>
-            <TimePickerItem>8:00 AM</TimePickerItem>
-            <TimePickerItem>9:00 AM</TimePickerItem>
-            <TimePickerItem>10:00 AM</TimePickerItem>
-            <TimePickerItem>11:00 AM</TimePickerItem>
-            <TimePickerItem>12:00 AM</TimePickerItem>
-            <TimePickerItem>1:00 PM</TimePickerItem>
-            <TimePickerItem>2:00 PM</TimePickerItem>
-            <TimePickerItem>3:00 PM</TimePickerItem>
-            <TimePickerItem>4:00 PM</TimePickerItem>
-            <TimePickerItem>5:00 PM</TimePickerItem>
-            <TimePickerItem>6:00 PM</TimePickerItem>
+            {availability?.possibleTimes.map((hour) => {
+              return (
+                <TimePickerItem
+                  key={hour}
+                  disabled={!availability.availableTimes.includes(hour)}
+                >
+                  {dayjs(String(hour), 'h').format('h:[00] A')}
+                </TimePickerItem>
+              )
+            })}
           </TimePickerList>
         </TimePicker>
       )}
