@@ -48,7 +48,7 @@ export function CalendarStep() {
 
       return response.data
     },
-    enabled: !!selectedDate,
+    // enabled: !!selectedDate,
   })
 
   return (
